@@ -46,25 +46,4 @@
 		<property name="mimeTypesFileResourcePath" value="/mime.types"/>
 	</bean>
 
-	<!-- ===================================================== -->
-	<!-- MyBatis implementation -->
-
-	<!-- MyBatis SQLSession "FactoryBean" used by MapperFactoryBean implementations >
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="configLocation" value="classpath:uk/co/whatsa/timeline/mybatis/mybatis-config.xml" />
-		<property name="mapperLocations" value="classpath*:uk/co/whatsa/timeline/mybatis/*-mapper.xml" />
-	</bean>
-
-	<bean id="bikeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="uk.co.whatsa.timeline.mybatis.BikeMapper" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-	</bean-->
-
-	<!-- Scans and registers interfaces as MyBatis mapper classes -->
-	<!-- mybatis:scan base-package="uk.co.whatsa.bike.mybatis" / -->
-
-	<!-- MyBatis implementation -->
-	<!-- ===================================================== -->
-
 </beans>
