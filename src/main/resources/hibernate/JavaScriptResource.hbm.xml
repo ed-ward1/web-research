@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="uk.co.whatsa.research.model">
+
+	<class name="JavaScriptResource" table="JAVASCRIPT_RESOURCE">
+
+		<id name="id" column="id" type="uk.co.whatsa.persistence.hibernate.IDUserType">
+			<generator class="native" />
+		</id>
+
+		<property name="name" column="name" type="string" />
+
+		<property name="javaScript" column="javascript" type="string" lazy="false" />
+
+	</class>
+
+</hibernate-mapping>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		<property name="url" value="jdbc:mysql://localhost/research" />
+		<property name="username" value="user1" />
+		<property name="password" value="letmein" />
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- Hibernate configuration -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mappingResources">
+			<set>
+				<value>hibernate/WebPage.hbm.xml</value>
+				<value>hibernate/WebPageResource.hbm.xml</value>
+				<value>hibernate/JavaScriptResource.hbm.xml</value>
+			</set>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="researchDAO" class="uk.co.whatsa.research.dao.hibernate.ResearchDaoHibernate">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="mimetypesFileTypeMap" class="uk.co.whatsa.research.presentation.MimetypesFileTypeMapFactoryBean">
+		<property name="mimeTypesFileResourcePath" value="/mime.types"/>
+	</bean>
+
+	<!-- ===================================================== -->
+	<!-- MyBatis implementation -->
+
+	<!-- MyBatis SQLSession "FactoryBean" used by MapperFactoryBean implementations >
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:uk/co/whatsa/timeline/mybatis/mybatis-config.xml" />
+		<property name="mapperLocations" value="classpath*:uk/co/whatsa/timeline/mybatis/*-mapper.xml" />
+	</bean>
+
+	<bean id="bikeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="uk.co.whatsa.timeline.mybatis.BikeMapper" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean-->
+
+	<!-- Scans and registers interfaces as MyBatis mapper classes -->
+	<!-- mybatis:scan base-package="uk.co.whatsa.bike.mybatis" / -->
+
+	<!-- MyBatis implementation -->
+	<!-- ===================================================== -->
+
+</beans>

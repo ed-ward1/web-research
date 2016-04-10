@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- The root application context to the web application context. ContextSingletonBeanFactoryLocator 
+		is used to locate and create the application context bean. (see uk.co.whatsa.web.context.ContextHierarchyLoaderListener -->
+	<bean id="parentBeanFactory" class="org.springframework.context.support.ClassPathXmlApplicationContext">
+		<constructor-arg value="researchRootContext.xml" />
+	</bean>
+</beans>

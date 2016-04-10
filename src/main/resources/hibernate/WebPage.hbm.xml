@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="uk.co.whatsa.research.model">
+
+	<class name="WebPage" table="WEBPAGE">
+
+		<id name="id" column="id" type="uk.co.whatsa.persistence.hibernate.IDUserType">
+			<generator class="native" />
+		</id>
+
+		<property name="url" column="url" type="string" />
+
+		<property name="pageDate" column="page_date"
+			type="org.jadira.usertype.dateandtime.joda.PersistentDateTime" />
+
+		<property name="recordedDate" column="recorded_date"
+			type="org.jadira.usertype.dateandtime.joda.PersistentDateTime" />
+
+		<property name="comment" column="comment" type="string" />
+
+		<many-to-one name="mainResource" class="WebPageResource" column="main_WEBPAGE_RESOURCE_id"
+			unique="true" cascade="save-update" lazy="false" not-null="false" />
+
+		<set name="resources" table="WEBPAGE_RESOURCE" cascade="all-delete-orphan" inverse="true">
+			<key column="WEBPAGE_id" />
+			<one-to-many class="WebPageResource" />
+		</set>
+
+	</class>
+
+</hibernate-mapping>

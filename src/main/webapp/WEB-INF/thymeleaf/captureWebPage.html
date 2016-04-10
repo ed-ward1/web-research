@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<!--/*/ <th:block th:include="fragments/pageTemplate :: head"></th:block> /*/-->
+<title th:value="#{application.title} + ' - ' + #{capture-web-page.title}">Research Assistant</title>
+</head>
+
+<body>
+	<!--/*/ <th:block th:include="fragments/pageTemplate :: pageheader"></th:block> /*/-->
+
+	<script>
+		$(document).ready(function() {
+			// Attach a handler to the submit button click event
+			$("#submit-btn").on("click", function() {
+				var elements = document.forms[0].elements;
+				var parameters = {
+					url : elements["url"].value,
+					pageDate : elements["pageDate"].value,
+					recordedDate : elements["recordedDate"].value,
+					comment : elements["comment"].value
+				};
+				$.post("captureAjax", parameters, addNewTab);
+			});
+		});
+
+		// Call back for AJAX response - Add a new list item with a unique id
+		function addNewTab(tailed) {
+			$.post("newTab", {selector : tailed.selector}, function(tabFrag) {
+				$("#tabs").append(tabFrag);
+				$("#" + tailed.selector).attr("checked");
+			});
+			setTimeout(tailFile, 200, tailed);
+		};
+
+		// Check to see if the file being tailed has been updated
+		// The post returns only when there has been an update or there was a timeout (no more updates) 
+		function tailFile(tailed) {
+//			alert(JSON.stringify(tailed));
+			$.post("/research/tail", tailed,
+				// Appends data returned to the associated element
+				function appendResult(tailed) {
+					if (tailed.errorMessage === "") {
+						var element = $("#" + tailed.selector);
+						element.append(tailed.data);
+						element.scrollTop(element[0].scrollHeight);
+						setTimeout(tailFile, 200, tailed);						
+					}
+				});
+		};
+	</script>
+
+	<h1 th:value="#{capture-web-page.heading}">Capture Web Page</h1>
+	<form method="post" onsubmit="javascript: return false;" th:object="${webPage}">
+
+		<div class="form-item">
+			<div class="form-label" th:text="#{capture-web-page.label.url}">URL:</div>
+			<input class="form-text-input url" type="text" name="url" th:value="*{url}"
+				value="http://www.activistpost.com/2016/01/cell-tower-radiation-prevents-garden-cress-seed-germination-in-danish-experiment.html" />
+		</div>
+
+		<div class="form-item">
+			<div class="form-label" th:text="#{capture-web-page.label.page-date}">Page date:</div>
+			<input class="form-text-input date" type="text" name="pageDate" value="2015-12-24 01:23" th:field="*{pageDate}"
+				th:errorclass="fieldError" />
+		</div>
+
+		<div class="form-item">
+			<div class="form-label" th:text="#{capture-web-page.label.recorded-date}">Recorded date:</div>
+			<input class="form-text-input date" type="text" name="recordedDate" value="2015-12-25 12:14"
+				th:field="*{recordedDate}" th:errorclass="fieldError" />
+		</div>
+
+		<div class="form-item">
+			<div class="form-label" th:value="#{capture-web-page.label.comment}">Comment:</div>
+			<textarea rows="4" name="comment" th:value="#{form.webpage.comment}" th:field="*{comment}">This is a comment</textarea>
+		</div>
+
+		<div class="form-item">
+			<input id="submit-btn" class="form-submit" type="submit" value="Press Me" th:value="#{capture-web-page.label.submit}" />
+		</div>
+	</form>
+
+	<div th:if="${outputLogFilename} != null" th:text="'log filename = ' + ${outputLogFilename}"></div>
+
+	<div th:if="${errorCode} != null" th:text="'error code == ' + ${errorCode}"></div>
+
+	<th:block th:each="line : ${errorMessageLines}">
+		<div class="error" th:text="${line}">This is where an error message is displayed if the page capture fails</div>
+	</th:block>
+
+	<div class="tabs" id="tabs"></div>
+</body>
+</html>

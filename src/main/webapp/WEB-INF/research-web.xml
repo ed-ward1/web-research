@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<mvc:resources location="/css/" mapping="/css/**"/>
+	<mvc:resources location="/js/" mapping="/js/**"/>
+
+	<!-- ================================================================ -->
+	<!-- Specify the conversion service to be used when binding UI fields -->
+	<!-- ================================================================ -->
+	
+	<mvc:annotation-driven conversion-service="conversionService"/>
+	
+	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="formatters">
+			<set>
+				<bean class="uk.co.whatsa.spring.joda.CustomDateTimeFormatter"/>
+			</set>
+		</property>
+	</bean>
+
+	<!-- ================================================================= -->
+	<!-- Scan for components on the classpath and register as Spring beans -->
+	<!-- ================================================================= -->
+	
+	<context:component-scan base-package="uk.co.whatsa.research" />
+
+	<!-- ============================================= -->
+	<!-- The internationalised messages used in the UI -->
+	<!-- ============================================= -->
+
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="Messages"/>
+	</bean>
+
+	<!-- ======================= -->
+	<!-- Thymeleaf configuration -->
+	<!-- ======================= -->
+
+	<bean id="templateResolver" class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
+		<property name="prefix" value="/WEB-INF/thymeleaf/" />
+		<property name="suffix" value=".html" />
+		<property name="templateMode" value="HTML" />
+		<property name="cacheable" value="false" />
+		<property name="characterEncoding" value="UTF-8"/>
+	</bean>
+
+	<bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
+		<property name="templateResolver" ref="templateResolver" />
+	</bean>
+
+	<bean id="thymeleafViewResolver" class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+		<property name="templateEngine" ref="templateEngine" />
+		<property name="characterEncoding" value="UTF-8"/>
+	</bean>
+	
+	<!-- ================= -->
+	<bean id="executorService" class="java.util.concurrent.Executors" factory-method="newCachedThreadPool"/>
+	
+	<bean id="executorCompletionService" class="java.util.concurrent.ExecutorCompletionService">
+		<constructor-arg ref="executorService"/>
+	</bean>
+
+	<bean id="captureWebPage" class="uk.co.whatsa.research.presentation.CaptureWebPage" scope="prototype">
+		<constructor-arg value="null"/>
+	</bean>
+</beans>

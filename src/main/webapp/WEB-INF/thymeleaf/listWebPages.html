@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<!--/*/ <th:block th:include="fragments/pageTemplate :: head"></th:block> /*/-->
+</head>
+<body>
+	<!--/*/ <th:block th:include="fragments/pageTemplate :: pageheader"></th:block> /*/-->
+	
+	<h1>List of web pages stored</h1>
+	Edit a web page: <br />
+	<a th:each="webPage : ${research.webPages}" th:href="@{editWebPage.html?id={webPageId}(webPageId=${webPage.id})}"
+		href="editWebPage.html?id=1" th:utext="${webPage.domainName} + ' - ' + ${webPage.url} + '<br/>'">
+		www.21stcenturywire.com - http://www.21stcenturywire.com/the-page/
+	</a>
+	<br/>
+	<br/>
+	<a href="editWebPage.html">Add a new Web Page</a>
+	<br>
+	<iframe name="webpage" src="http://www.sgtreport.com/" width="100%" height="100000px"></iframe>
+</body>
+</html>

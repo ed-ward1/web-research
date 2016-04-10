@@ -1,0 +1,72 @@
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'jetty'
+
+// JDK 7
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+repositories {
+    //mavenLocal()
+    //mavenCentral()
+    jcenter()
+}
+
+dependencies {
+
+	runtime 'org.springframework:spring-beans:4.2.2.RELEASE'
+	runtime 'org.springframework:spring-webmvc:4.2.2.RELEASE'
+ 	runtime 'org.springframework:spring-jdbc:4.2.2.RELEASE'
+ 	runtime 'org.springframework:spring-orm:4.2.2.RELEASE'
+
+ 	runtime 'org.hibernate:hibernate-core:5.0.6.Final'
+ 	runtime 'javax.transaction:jta:1.1'
+ 	
+	runtime 'com.fasterxml.jackson.core:jackson-core:2.5.0'
+	runtime 'com.fasterxml.jackson.core:jackson-databind:2.5.0'
+
+	compile 'org.mybatis:mybatis:3.3.0'
+	compile 'org.mybatis:mybatis-spring:1.2.3'
+
+	runtime('org.thymeleaf:thymeleaf:3.0.0.BETA01') {
+		exclude group:  'javassist'
+    }
+    
+	runtime('org.thymeleaf:thymeleaf-spring4:3.0.0.BETA01') {
+		exclude group:  'javassist'
+    }
+
+	runtime 'joda-time:joda-time:2.9.1'
+	
+	// Joda date / time user type mapping
+	runtime 'org.jadira.usertype:usertype.jodatime:2.0.1'
+	
+ 	runtime 'apache-log4j:log4j:1.2.15'
+ 	runtime 'org.slf4j:slf4j-api:1.7.13'
+ 	runtime 'org.slf4j:slf4j-log4j12:1.7.13'
+	
+ 	compile 'javax.servlet:jstl:1.2'
+ 	runtime 'mysql:mysql-connector-java:5.1.37'
+ 	
+	providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+ 	
+	testCompile 'org.springframework:spring-test:4.2.2.RELEASE'
+	testCompile 'junit:junit:4.12'
+	testCompile 'org.dbunit:dbunit:2.5.1'
+	//testCompile 'org.springframework:spring-mock:2.0.8'
+}
+
+//For Eclipse IDE only
+eclipse {
+
+  wtp {
+    component {
+      
+      //define context path, default to project folder name
+      contextPath = 'research'
+    }
+  }
+  
+}
+

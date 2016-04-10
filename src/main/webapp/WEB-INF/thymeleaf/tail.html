@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<!--/*/ <th:block th:include="fragments/pageTemplate :: head"></th:block> /*/-->
+<title th:value="#{application.title} + ' - ' + #{capture-web-page.title}">Research Assistant</title>
+<script>
+</script>	
+</head>
+
+<body>
+	<script>
+		var tailedFileOffset = 0;
+		
+		$(document).ready(
+				
+		function() {
+			// Attach a handler to the update button click event
+//			$("#updateButton").on("click", function() {
+//				var parameters = {filename: "/home/ed/Desktop/test.txt", offset: tailedFileOffset};
+//				$.post("tail", parameters, appendResult);
+//			});
+
+			setTimeout(tailFile, 200);
+		});
+
+		function tailFile() {
+			var parameters = {filename: "/home/ed/Desktop/test.txt", offset: tailedFileOffset};
+			$.post("tail", parameters, appendResult);
+		};
+		
+		// Call back for AJAX response
+		function appendResult(tailedFile) {
+			var newText = $("#new");
+			newText.append(tailedFile.data);
+			tailedFileOffset = tailedFile.offset;
+			setTimeout(tailFile, 200);
+		};
+	</script>
+	
+	<!--/*/ <th:block th:include="fragments/pageTemplate :: pageheader"></th:block> /*/-->
+
+	<h1 th:value="#{capture-web-page.heading}">Tail file</h1>
+
+	<pre id="new"></pre>
+	
+	<form method="post" action="tail">
+		<div class="form-item">
+			<div class="form-label" th:text="#{tail-file.label.filename}">Filename:</div>
+			<input class="form-text-input url" type="text" name="filename" size="100" th:value="${filename}"
+				value="/tmp/page.sjdhjshds/wget.log" />
+		</div>
+
+		<div class="form-item">
+			<input class="form-submit" type="submit" value="Press Me"
+				th:value="#{capture-web-page.label.submit}" />
+		</div>
+
+		<input type="button" id="updateButton" value="Update"/>
+	</form>
+	
+	<div th:if="${errorMessage} != null" th:text="${errorMessage}"></div>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="uk.co.whatsa.research.model">
+
+	<class name="WebPageResource" table="WEBPAGE_RESOURCE" >
+
+		<id name="id" column="id" type="uk.co.whatsa.persistence.hibernate.IDUserType">
+			<generator class="native" />
+		</id>
+
+		<discriminator column="type" type="string" />
+
+		<!-- The foreign key created and maintained by the one-to-many on WebPage. We need it in 
+			HQL queries though since we also retrieve it directly (more efficiently) rather than via the 
+			Set on WebPage -->
+		<many-to-one name="webPage" column="WEBPAGE_id" not-null="true" class="WebPage" />
+
+		<property name="path" column="path" type="string" />
+
+		<property name="mimeContentType" column="mime_type" type="string" />
+
+		<subclass name="TextWebPageResource" discriminator-value="TEXT" >
+			<property name="resourceText" column="resource_text" type="string" />
+
+			<subclass name="HtmlWebPageResource" discriminator-value="HTML" />
+			<subclass name="CssWebPageResource" discriminator-value="CSS" />
+			<subclass name="XmlWebPageResource" discriminator-value="XML" />
+		</subclass>
+
+		<subclass name="JsWebPageResource" discriminator-value="JS">
+			<many-to-one name="javaScript" class="JavaScriptResource" column="JAVASCRIPT_RESOURCE_id" cascade="save-update" lazy="false"/>
+		</subclass>
+
+		<subclass name="BlobWebPageResource" discriminator-value="BLOB">
+			<property name="resourceBlob" column="resource_blob" type="binary" />
+
+			<subclass name="ImageWebPageResource" discriminator-value="IMAGE" />
+		</subclass>
+
+	</class>
+
+</hibernate-mapping>

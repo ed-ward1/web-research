@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd" >
+<web-app>
+
+	<!-- An extension to XmlWebApplicationContext that overrides getDefaultConfigLocations() in 
+		order to prevent unnecessary context configuration. -->
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>uk.co.whatsa.web.context.NoDefaultXmlWebApplicationContext</param-value>
+	</context-param>
+
+	<!-- Bootstrap code (implemented as a listener) to initialise a web application context with 
+		a parent application context. The class extends ContextLoaderListener which will instantiate 
+		(via a strategy) an instance of XmlWebApplicationContext and set it's parent based on the value 
+		returned by loadParentContext(ServletContext). Unfortunately when the child XmlWebApplicationContext 
+		is "refreshed" it will attempt to load the default config location "applicationContext.xml" 
+		in addition to the defined "contextConfigLocation" resource. This in my view is a bug since 
+		the context is not needed and not wanted. The above "contextClass" property configures an extension 
+		to XmlWebApplicationContext that overrides getDefaultConfigLocations() in order to prevent 
+		the unnecessary context configuration. -->
+	<listener>
+		<listener-class>uk.co.whatsa.web.context.ContextHierarchyLoaderListener</listener-class>
+	</listener>
+
+	<servlet>
+		<servlet-name>research</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<!-- The default location is "/WEB-INF/research-servlet.xml" if not specified here -->
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/research-web.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>research</servlet-name>
+		<url-pattern>/index.html</url-pattern>
+	</servlet-mapping>
+
+	<!-- The "/" pattern matches all files left after the other patterns.
+	     A value of "/*" would attempt to match everything and possibly conflict with other patterns. -->
+	<servlet-mapping>
+		<servlet-name>research</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+</web-app>

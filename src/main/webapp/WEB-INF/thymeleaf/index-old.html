@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<!--/*/ <th:block th:include="fragments/pageTemplate :: head"></th:block> /*/-->
+<script>
+	$(function() {
+		$("#link1").on("click", function() {
+			var aElement = this;
+			// setInterval(function() {handleClick("render1.html", aElement);}, 1000);
+		});
+		
+		$("#link2").on("click", function() {
+			handleClick("render2.html", this);
+		});
+		
+	});
+	
+	function handleClick(href, aElement) {
+		$.ajax({
+			url: href,
+			cache: false,
+			success: function(msg) {
+				newFragment = $(msg);
+				var fragmentId = newFragment.attr("id");
+				$("#" + fragmentId).html(newFragment);
+			},
+			complete: function() {
+			}
+		});
+	};
+</script>
+</head>
+
+<body>
+	<!--/*/ <th:block th:include="fragments/pageTemplate :: pageheader"></th:block> /*/-->
+
+	<span id="dummy2">
+		<span id="dummy1">abc</span>
+	</span>
+	
+	<div id="content-1" th:fragment="content1" th:text="${counter}">
+		This first content will be re-rendered
+	</div>
+
+	<div id="content-2" th:fragment="content2" th:text="${counter}">
+		This second content will be re-rendered
+	</div>
+
+	<a id="link1" href="#">Render first</a>
+	<br>
+	<a id="link2" href="#">Render second</a>
+</body>
+
+
+</html>
