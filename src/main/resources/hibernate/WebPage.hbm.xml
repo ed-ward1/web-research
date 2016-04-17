@@ -12,20 +12,11 @@
 
 		<property name="url" column="url" type="string" />
 
-		<property name="pageDate" column="page_date"
-			type="org.jadira.usertype.dateandtime.joda.PersistentDateTime" />
-
-		<property name="recordedDate" column="recorded_date"
-			type="org.jadira.usertype.dateandtime.joda.PersistentDateTime" />
-
 		<property name="comment" column="comment" type="string" />
 
-		<many-to-one name="mainResource" class="WebPageResource" column="main_WEBPAGE_RESOURCE_id"
-			unique="true" cascade="save-update" lazy="false" not-null="false" />
-
-		<set name="resources" table="WEBPAGE_RESOURCE" cascade="all-delete-orphan" inverse="true">
+		<set name="versions" table="WEBPAGE_VERSION" cascade="all-delete-orphan">
 			<key column="WEBPAGE_id" />
-			<one-to-many class="WebPageResource" />
+			<one-to-many class="WebPageVersion" />
 		</set>
 
 	</class>

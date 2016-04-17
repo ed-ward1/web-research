@@ -15,9 +15,8 @@
 				var elements = document.forms[0].elements;
 				var parameters = {
 					url : elements["url"].value,
-					pageDate : elements["pageDate"].value,
-					recordedDate : elements["recordedDate"].value,
-					comment : elements["comment"].value
+					comment : elements["comment"].value,
+					recordedDate : elements["recordedDate"].value					
 				};
 				$.post("captureAjax", parameters, addNewTab);
 			});
@@ -50,18 +49,12 @@
 	</script>
 
 	<h1 th:value="#{capture-web-page.heading}">Capture Web Page</h1>
-	<form method="post" onsubmit="javascript: return false;" th:object="${webPage}">
+	<form method="post" onsubmit="javascript: return false;" th:object="${webPageModelAttribute}">
 
 		<div class="form-item">
 			<div class="form-label" th:text="#{capture-web-page.label.url}">URL:</div>
 			<input class="form-text-input url" type="text" name="url" th:value="*{url}"
 				value="http://www.activistpost.com/2016/01/cell-tower-radiation-prevents-garden-cress-seed-germination-in-danish-experiment.html" />
-		</div>
-
-		<div class="form-item">
-			<div class="form-label" th:text="#{capture-web-page.label.page-date}">Page date:</div>
-			<input class="form-text-input date" type="text" name="pageDate" value="2015-12-24 01:23" th:field="*{pageDate}"
-				th:errorclass="fieldError" />
 		</div>
 
 		<div class="form-item">

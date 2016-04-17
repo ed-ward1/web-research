@@ -19,43 +19,73 @@ public class TailedFile {
 	/** Set if the file could not be tailed. */
 	private String errorMessage;
 
-	public long getOffset() {
+	/**
+	 * @return {@link #offset}
+	 */
+	public final long getOffset() {
 		return offset;
 	}
 
-	public void setOffset(final long offset) {
+	/**
+	 * @param offset {@link #offset}
+	 */
+	public final void setOffset(final long offset) {
 		this.offset = offset;
 	}
 
-	public String getData() {
+	/**
+	 * @return {@link #data}
+	 */
+	public final String getData() {
 		return data;
 	}
 
-	public void setData(final String data) {
+	/**
+	 * @param data {@link #data}
+	 */
+	public final void setData(final String data) {
 		this.data = data;
 	}
 
-	public String getSelector() {
+	/**
+	 * @return {@link #selector}
+	 */
+	public final String getSelector() {
 		return selector;
 	}
 
-	public void setSelector(String selector) {
+	/**
+	 * @param selector {@link #selector}
+	 */
+	public final void setSelector(final String selector) {
 		this.selector = selector;
 	}
 
-	public String getFileName() {
+	/**
+	 * @return {@link #fileName}
+	 */
+	public final String getFileName() {
 		return fileName;
 	}
 
-	public void setFileName(String fileName) {
+	/**
+	 * @param fileName {@link #fileName}
+	 */
+	public final void setFileName(final String fileName) {
 		this.fileName = fileName;
 	}
 
-	public String getErrorMessage() {
+	/**
+	 * @return {@link #errorMessage}
+	 */
+	public final String getErrorMessage() {
 		return errorMessage;
 	}
 
-	public void setErrorMessage(String errorMessage) {
+	/**
+	 * @param errorMessage {@link #errorMessage}
+	 */
+	public final void setErrorMessage(final String errorMessage) {
 		this.errorMessage = errorMessage;
 	}
 }

@@ -1,109 +1,124 @@
 package uk.co.whatsa.research.model;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.joda.time.DateTime;
-
 import uk.co.whatsa.persistence.Persistent;
 
+/**
+ * A logical representation of a web page. The class holds a
+ * collection of {@link WebPage} instances, one for each time the page
+ * was saved.
+ */
 public class WebPage extends Persistent {
+    /** The internet URL of the page that was saved. */
+    private String url;
 
-	////////////////////////////////////
-	// The persistent state of a WebPage
+    /** Any comments associated with the page. */
+    private String comment;
 
-	/** The internet URL of the page that was saved. */
-	private String url;
+    /** An instance of WebPage for each time the page was saved. */
+    private Set<WebPageVersion> versions = new HashSet<WebPageVersion>();
 
-	/** The date the page was published. */
-	private DateTime pageDate;
+    /**
+     * Default constructor.
+     */
+    public WebPage() {
+        super();
+    }
 
-	/** The date the page was recorded / saved. */
-	private DateTime recordedDate;
+    /**
+     * @param url the URL used to retrieve the web page
+     * @param comment a use comment associated with the web page
+     */
+    public WebPage(final String url, final String comment) {
+        super();
+        this.url = url;
+        this.comment = comment;
+    }
 
-	/** Any comments associated with the page. */
-	private String comment;
+    /**
+     * @return {@link #url}
+     */
+    public final String getUrl() {
+        return url;
+    }
 
-	/** The root HTML resource that was "saved" and which is displayed. */
-	private WebPageResource mainResource;
+    /**
+     * @param url {@link #url}
+     */
+    public final void setUrl(final String url) {
+        this.url = url;
+    }
 
-	/**
-	 * A collection of all the "saved" resources, including the "main" one associated with /
-	 * comprising this page.
-	 */
-	private Set<WebPageResource> resources = new HashSet<WebPageResource>();
+    /**
+     * @return {@link #comment}
+     */
+    public final String getComment() {
+        return comment;
+    }
 
-	// The persistent state of a WebPage
-	////////////////////////////////////
+    /**
+     * @param comment {@link #comment}
+     */
+    public final void setComment(final String comment) {
+        this.comment = comment;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    /**
+     * @return {@link #versions}
+     */
+    public final Set<WebPageVersion> getVersions() {
+        return versions;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    /**
+     * @param versions {@link #versions}
+     */
+    public final void setVersions(final Set<WebPageVersion> versions) {
+        this.versions = versions;
+    }
 
-	public DateTime getPageDate() {
-		return pageDate;
-	}
+    /**
+     * Adds a web page version to the collection managed by the web
+     * page. The web page should be associated with the URL contained
+     * in this web page instance.
+     * 
+     * @param version the web page version to be associated with this
+     *            web page
+     * @return true if the addition succeeded
+     */
+    public final boolean addVersion(final WebPageVersion version) {
+        final boolean result = versions.add(version);
+        if (result) {
+            version.setOwningWebPage(this);
+        }
+        return result;
+    }
 
-	public void setPageDate(DateTime pageDate) {
-		this.pageDate = pageDate;
-	}
+    /**
+     * Removes a web page version from the collection managed by this
+     * web page.
+     * 
+     * @param version the version to be removed
+     * @return {@code true} if the removal succeeded else
+     *         {@code false} is returned
+     */
+    public final boolean removeVersion(final WebPageVersion version) {
+        boolean result = false;
+        if (version.getOwningWebPage().equals(this)) {
+            result = versions.remove(version);
+            version.setOwningWebPage(null);
+        }
+        return result;
+    }
 
-	public DateTime getRecordedDate() {
-		return recordedDate;
-	}
-
-	public void setRecordedDate(DateTime recordedDate) {
-		this.recordedDate = recordedDate;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public WebPageResource getMainResource() {
-		return mainResource;
-	}
-
-	public void setMainResource(WebPageResource mainResource) {
-		this.mainResource = mainResource;
-	}
-
-	public Set<WebPageResource> getResources() {
-		return resources;
-	}
-
-	public void setResources(Set<WebPageResource> resources) {
-		this.resources = resources;
-	}
-
-	///////////////////////////////////////////////////////////////////////
-	// Behaviour and functionality in addition to the persistent properties.
-
-	public void addResource(WebPageResource resource) {
-		getResources().add(resource);
-		resource.setWebPage(this);
-	}
-
-	/**
-	 * @return The domain name from the URL used to read the web page.
-	 */
-	public String getDomainName() {
-		String domainName = "";
-		try {
-			domainName = new URL(getUrl()).getHost();
-		} catch (MalformedURLException e) {
-			LOG.error("Malformed URL for webpage : ", getUrl());
-		}
-		return domainName;
-	}
+    /**
+     * TODO return the latest version rather than any old version.
+     * 
+     * @return The most recently added version of the web page
+     */
+    public final WebPageVersion getNewestVersion() {
+        return versions.iterator().next();
+    }
 }

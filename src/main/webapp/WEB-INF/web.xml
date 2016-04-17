@@ -6,7 +6,7 @@
 		order to prevent unnecessary context configuration. -->
 	<context-param>
 		<param-name>contextClass</param-name>
-		<param-value>uk.co.whatsa.web.context.NoDefaultXmlWebApplicationContext</param-value>
+		<param-value>uk.co.whatsa.spring.web.context.NoDefaultXmlWebApplicationContext</param-value>
 	</context-param>
 
 	<!-- Bootstrap code (implemented as a listener) to initialise a web application context with 
@@ -19,7 +19,7 @@
 		to XmlWebApplicationContext that overrides getDefaultConfigLocations() in order to prevent 
 		the unnecessary context configuration. -->
 	<listener>
-		<listener-class>uk.co.whatsa.web.context.ContextHierarchyLoaderListener</listener-class>
+		<listener-class>uk.co.whatsa.spring.web.context.ContextHierarchyLoaderListener</listener-class>
 	</listener>
 
 	<servlet>

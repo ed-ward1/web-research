@@ -1,4 +1,4 @@
-package uk.co.whatsa.web.context;
+package uk.co.whatsa.spring.web.context;
 
 import javax.servlet.ServletContext;
 
@@ -36,9 +36,14 @@ public class ContextHierarchyLoaderListener extends ContextLoaderListener {
 	 */
 	public static final String BEAN_FACTORY_NAME_PARAM = "parentBeanFactoryName";
 
+	/** The name of the default bean factory. */
 	private static final String DEFAULT_BEAN_FACTORY_NAME = "parentBeanFactory";
 
-	protected ApplicationContext loadParentContext(ServletContext servletContext) {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected final ApplicationContext loadParentContext(final ServletContext servletContext) {
 		String parentContextConfig = servletContext.getInitParameter(PARENT_CONFIG_LOCATION_PARAM);
 		BeanFactoryLocator locator = null;
 

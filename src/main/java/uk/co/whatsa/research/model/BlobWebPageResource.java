@@ -1,30 +1,53 @@
 package uk.co.whatsa.research.model;
 
+/**
+ * Represents a web page resource consisting of byte data.
+ */
 public class BlobWebPageResource extends WebPageResource {
-	private byte[] blob;
+    /** The byte array used to store the BLOB data. */
+    private byte[] blob;
 
-	public BlobWebPageResource() {
-	}
+    /**
+     * Default constructor.
+     */
+    public BlobWebPageResource() {
+        super();
+    }
 
-	public BlobWebPageResource(String mimeContentType) {
-		super(mimeContentType);
-	}
+    /**
+     * @param mimeContentType {@link WebPageResource#getMimeContentType()}
+     */
+    public BlobWebPageResource(final String mimeContentType) {
+        super(mimeContentType);
+    }
 
-	public byte[] getResourceBlob() {
-		return blob;
-	}
+    /**
+     * @return {@link #blob}
+     */
+    public final byte[] getResourceBlob() {
+        return blob;
+    }
 
-	public void setResourceBlob(byte[] blob) {
-		this.blob = blob;
-	}
+    /**
+     * @param blob {@link #blob}
+     */
+    public final void setResourceBlob(final byte[] blob) {
+        this.blob = blob.clone();
+    }
 
-	@Override
-	public byte[] getResourceData() {
-		return blob;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final byte[] getResourceData() {
+        return getResourceBlob();
+    }
 
-	@Override
-	public void setResourceData(byte[] resourceData) {
-		this.blob = resourceData;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final void setResourceData(final byte[] resourceData) {
+        setResourceBlob(resourceData);
+    }
 }

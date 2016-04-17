@@ -1,30 +1,58 @@
 package uk.co.whatsa.research.model;
 
+/**
+ * Represents a JavaScript web page resource. The class encapsulates a
+ * reference to a shared JavaScript resource.
+ */
 public class JsWebPageResource extends WebPageResource {
-	private JavaScriptResource javaScript;
-	
-	public JsWebPageResource() {
-	}
 
-	public JsWebPageResource(String mimeContentType) {
-		super(mimeContentType);
-	}
+    /**
+     * The JavaScript resource object representing a row in the
+     * database.
+     */
+    private JavaScriptResource javaScript;
 
-	public JavaScriptResource getJavaScript() {
-		return javaScript;
-	}
+    /**
+     * Default constructor.
+     */
+    public JsWebPageResource() {
+        super();
+    }
 
-	public void setJavaScript(JavaScriptResource javaScript) {
-		this.javaScript = javaScript;
-	}
+    /**
+     * @param mimeContentType {@link WebPageResource#setMimeContentType(String)}
+     */
+    public JsWebPageResource(final String mimeContentType) {
+        super(mimeContentType);
+    }
 
-	@Override
-	public byte[] getResourceData() {
-		return javaScript.getJavaScript().getBytes();
-	}
+    /**
+     * @return {@link #javaScript}
+     */
+    public final JavaScriptResource getJavaScript() {
+        return javaScript;
+    }
 
-	@Override
-	public void setResourceData(byte[] resourceData) {
-		getJavaScript().setJavaScript(new String(resourceData));
-	}
+    /**
+     * @param javaScript {@link #javaScript}
+     */
+    public final void setJavaScript(final JavaScriptResource javaScript) {
+        this.javaScript = javaScript;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final byte[] getResourceData() {
+        return javaScript.getJavaScript().getBytes();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final void setResourceData(final byte[] resourceData) {
+        getJavaScript().setJavaScript(new String(resourceData));
+    }
 }

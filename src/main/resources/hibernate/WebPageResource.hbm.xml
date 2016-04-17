@@ -15,7 +15,10 @@
 		<!-- The foreign key created and maintained by the one-to-many on WebPage. We need it in 
 			HQL queries though since we also retrieve it directly (more efficiently) rather than via the 
 			Set on WebPage -->
-		<many-to-one name="webPage" column="WEBPAGE_id" not-null="true" class="WebPage" />
+		<set name="webPageVersions" table="WEBPAGEVERSION_RESOURCE" cascade="save-update" lazy="true" inverse="true">
+			<key column="WEBPAGE_RESOURCE_id"/>
+			<many-to-many class="WebPageVersion" column="WEBPAGE_VERSION_id"/>
+		</set>
 
 		<property name="path" column="path" type="string" />
 
@@ -29,14 +32,14 @@
 			<subclass name="XmlWebPageResource" discriminator-value="XML" />
 		</subclass>
 
-		<subclass name="JsWebPageResource" discriminator-value="JS">
-			<many-to-one name="javaScript" class="JavaScriptResource" column="JAVASCRIPT_RESOURCE_id" cascade="save-update" lazy="false"/>
-		</subclass>
-
 		<subclass name="BlobWebPageResource" discriminator-value="BLOB">
 			<property name="resourceBlob" column="resource_blob" type="binary" />
 
 			<subclass name="ImageWebPageResource" discriminator-value="IMAGE" />
+		</subclass>
+
+		<subclass name="JsWebPageResource" discriminator-value="JS">
+			<many-to-one name="javaScript" class="JavaScriptResource" column="JAVASCRIPT_RESOURCE_id" cascade="save-update" lazy="false"/>
 		</subclass>
 
 	</class>

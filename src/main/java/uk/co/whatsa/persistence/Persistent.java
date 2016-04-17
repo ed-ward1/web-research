@@ -9,20 +9,43 @@ import org.slf4j.LoggerFactory;
  * 
  * @see ID
  */
-public abstract class Persistent {
-	protected static Logger LOG = LoggerFactory.getLogger(Persistent.class);
+public class Persistent {
+    /** Logger. */
+	private static final Logger LOG = LoggerFactory.getLogger(Persistent.class);
 
+	/** The persistent class's identifier in the database. */
 	private ID id;
 
-	public ID getId() {
+	/**
+	 * Ctor.
+	 */
+	protected Persistent() {
+	    // Empty
+	}
+	
+	/**
+	 * 
+	 * @return {@link #id}
+	 */
+	public final ID getId() {
 		return id;
 	}
 
-	public void setId(ID id) {
+	/**
+	 * @param id {@link #id}
+	 */
+	public final void setId(final ID id) {
 		this.id = id;
 	}
 
-	public boolean isPersistent() {
-		return id != null && id.isSet();
+	/**
+	 * @return {@link LOG}
+	 */
+	protected final Logger getLogger() {
+	    return LOG;
 	}
+
+//	public boolean isPersistent() {
+//		return id != null && id.isSet();
+//	}
 }

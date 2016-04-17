@@ -1,11 +1,21 @@
 package uk.co.whatsa.research.model;
 
+/**
+ * Represents an HTML web page resource.
+ */
 public class HtmlWebPageResource extends TextWebPageResource {
 
-	public HtmlWebPageResource() {
+    /**
+     * Default constructor.
+     */
+    public HtmlWebPageResource() {
+	    super();
 	}
 
-	public HtmlWebPageResource(String mimeContentType) {
+    /**
+     * @param mimeContentType {@link TextWebPageResource#setMimeContentType(String)}
+     */
+	public HtmlWebPageResource(final String mimeContentType) {
 		super(mimeContentType);
 	}
 }

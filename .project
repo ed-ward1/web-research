@@ -2,23 +2,38 @@
 <projectDescription>
 	<name>Web Research</name>
 	<comment>Timeline of events associate with a trigger event</comment>
-	<projects/>
+	<projects>
+	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
-			<arguments/>
+			<arguments>
+			</arguments>
 		</buildCommand>
 		<buildCommand>
 			<name>org.eclipse.wst.common.project.facet.core.builder</name>
-			<arguments/>
+			<arguments>
+			</arguments>
 		</buildCommand>
 		<buildCommand>
 			<name>org.eclipse.wst.validation.validationbuilder</name>
-			<arguments/>
+			<arguments>
+			</arguments>
 		</buildCommand>
 		<buildCommand>
 			<name>org.springframework.ide.eclipse.core.springbuilder</name>
-			<arguments/>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>net.sf.eclipsecs.core.CheckstyleBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>net.sourceforge.pmd.eclipse.plugin.pmdBuilder</name>
+			<arguments>
+			</arguments>
 		</buildCommand>
 	</buildSpec>
 	<natures>
@@ -28,6 +43,7 @@
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 		<nature>org.eclipse.wst.common.modulecore.ModuleCoreNature</nature>
 		<nature>org.eclipse.jem.workbench.JavaEMFNature</nature>
+		<nature>net.sourceforge.pmd.eclipse.plugin.pmdNature</nature>
+		<nature>net.sf.eclipsecs.core.CheckstyleNature</nature>
 	</natures>
-	<linkedResources/>
 </projectDescription>

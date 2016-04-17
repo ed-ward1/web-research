@@ -1,11 +1,21 @@
 package uk.co.whatsa.research.model;
 
+/**
+ * Represents a web page XML resource.
+ */
 public class XmlWebPageResource extends TextWebPageResource {
 
+    /**
+     * Default constructor.
+     */
 	public XmlWebPageResource() {
+	    super();
 	}
 
-	public XmlWebPageResource(String mimeContentType) {
+	/**
+	 * @param mimeContentType {@link TextWebPageResource#setMimeContentType(String)}
+	 */
+	public XmlWebPageResource(final String mimeContentType) {
 		super(mimeContentType);
 	}
 }

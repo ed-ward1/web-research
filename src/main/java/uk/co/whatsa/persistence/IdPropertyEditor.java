@@ -11,18 +11,29 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class IdPropertyEditor extends PropertyEditorSupport {
-	@Override
-	public void setAsText(String text) throws IllegalArgumentException {
-		if (text == null || "".equals(text)) {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+	public final void setAsText(final String text) throws IllegalArgumentException {
+		if (text == null || text.length() == 0) {
 			setValue(null);
 		} else {
 			setValue(ID.valueOf(text));
 		}
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
-	public String getAsText() {
+	public final String getAsText() {
 		final Object value = getValue();
-		return value == null ? "" : ((ID) value).toString();
+		String result = "";
+		if (value != null) {
+		    result = ((ID) value).toString();
+		}
+		return result;
 	}
 }

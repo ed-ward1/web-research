@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project-modules id="moduleCoreId" project-version="2.0">
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
 	<wb-module deploy-name="Timeline">
 		<property name="context-root" value="research"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/resources"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/java"/>
 		<wb-resource deploy-path="/" source-path="src/main/webapp"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/deprecated/uk/co/whatsa/hibernate"/>
 		<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib//home/ed/.gradle/caches/modules-2/files-2.1/org.mybatis/mybatis/3.3.0/7c0e3582a1518b6d8e4e37ce2fc49b7bb6f2040f/mybatis-3.3.0.jar">
 			<dependency-type>uses</dependency-type>
 		</dependent-module>

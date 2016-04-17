@@ -1,6 +1,7 @@
 package uk.co.whatsa.research.dao.hibernate;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.LockMode;
@@ -8,6 +9,8 @@ import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import uk.co.whatsa.persistence.ID;
@@ -15,68 +18,127 @@ import uk.co.whatsa.research.dao.ResearchDAO;
 import uk.co.whatsa.research.model.JavaScriptResource;
 import uk.co.whatsa.research.model.WebPage;
 import uk.co.whatsa.research.model.WebPageResource;
+import uk.co.whatsa.research.model.WebPageVersion;
 
+/**
+ * A Hibernate ORM implementation of the ResearchDAO interface.
+ */
 public class ResearchDaoHibernate implements ResearchDAO {
+    /** A logger. */
+    private static final Logger LOG = LoggerFactory.getLogger(ResearchDaoHibernate.class);
 
-	private SessionFactory sessionFactory;
+    /**
+     * The HQL query string used to retrieve a {@link WebPageResource}
+     * .
+     */
+    private static final String GET_WEB_PAGE_RESOURCE = "from WebPageResource wpr "
+            + "join wpr.webPageVersions version where version.id = :webPageVersionId and wpr.path like :path";
 
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+    /**
+     * The HQL query string used to retrieve a
+     * {@link JavaScriptResource} with a given name.
+     */
+    private static final String FIND_JAVASCRIPT_RESOURCE_WITH_NAME =
+            "from JavaScriptResource jsr where jsr.name = :name";
 
-	@Override
-	@Transactional(readOnly = true)
-	public WebPage getWebPage(ID webPageId) {
-		Session session = sessionFactory.getCurrentSession();
-		final WebPage webPage = session.get(WebPage.class, webPageId, LockMode.NONE);
-		return webPage;
-	}
+    /** The Hibernate session factory used to query the database. */
+    private SessionFactory sessionFactory;
 
-	@SuppressWarnings("unchecked")
-	@Override
-	@Transactional(readOnly = true)
-	public List<WebPage> getWebPages() {
-		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("from WebPage");
-		List<WebPage> webPages;
-		try {
-			webPages = query.list();
-		} catch (ObjectNotFoundException e) {
-			webPages = new ArrayList<WebPage>(0);
-		}
-		return webPages;
-	}
+    /**
+     * @param sessionFactory {@link #sessionFactory}
+     */
+    public final void setSessionFactory(final SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
-	@Override
-	@Transactional(readOnly = false, rollbackFor = RuntimeException.class)
-	public void saveWebPage(WebPage webPage) {
-		Session session = sessionFactory.getCurrentSession();
-		session.saveOrUpdate(webPage);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public final WebPage getWebPage(final ID webPageId) {
+        final Session session = sessionFactory.getCurrentSession();
+        return session.get(WebPage.class, webPageId, LockMode.NONE);
+    }
 
-	@Override
-	@Transactional(readOnly = true)
-	public WebPageResource getWebPageResource(ID webPageId, String resourcePath) {
-		final Session session = sessionFactory.getCurrentSession();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public final WebPageVersion getWebPageVersion(final ID webPageVersionId) {
+        final Session session = sessionFactory.getCurrentSession();
+        return session.get(WebPageVersion.class, webPageVersionId, LockMode.NONE);
+    }
 
-		final String queryString = "from WebPageResource wpr where wpr.webPage.id = :webPageId and wpr.path like :path";
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    @Transactional(readOnly = true)
+    public final List<WebPage> getWebPages() {
+        final Session session = sessionFactory.getCurrentSession();
+        final Query query = session.createQuery("from WebPage");
+        List<WebPage> webPages;
+        try {
+            webPages = query.list();
+        } catch (ObjectNotFoundException e) {
+            webPages = new ArrayList<WebPage>(0);
+        }
+        return webPages;
+    }
 
-		final WebPageResource webPageResource = (WebPageResource) session.createQuery(queryString)
-				.setInteger("webPageId", webPageId.getIntValue()).setString("path", resourcePath).uniqueResult();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
+    public final void saveWebPage(final WebPage webPage) {
+        final Session session = sessionFactory.getCurrentSession();
+        session.saveOrUpdate(webPage);
+    }
 
-		return webPageResource;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public final WebPageResource getWebPageResource(final ID webPageVersionId, final String resourcePath) {
+        final Session session = sessionFactory.getCurrentSession();
 
-	@Override
-	@Transactional(readOnly = true)
-	public JavaScriptResource findJavaScriptResourceWithName(String name) {
-		final Session session = sessionFactory.getCurrentSession();
+        final Query query = session.createQuery(GET_WEB_PAGE_RESOURCE)
+                .setInteger("webPageVersionId", webPageVersionId.getIntValue()).setString("path", resourcePath);
+        @SuppressWarnings("rawtypes")
+        final Iterator iterator = query.iterate();
+        WebPageResource webPageResource = null;
+        if (iterator.hasNext()) {
+            // The iterator will return an Object[] containing a
+            // WebPageResource and a WebPage (the joined objects)
+            final Object[] objects = (Object[]) query.iterate().next();
+            webPageResource = (WebPageResource) objects[0];
+            // We read the data here while the transaction is active.
+            // This is an abstract method and cannot
+            // easily be specified in the HQL
+            webPageResource.getResourceData();
+        } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("No resource found - WebPage id: " + webPageVersionId + ", " + resourcePath);
+            }
+        }
 
-		final String queryString = "from JavaScriptResource jsr where jsr.name = :name";
+        return webPageResource;
+    }
 
-		JavaScriptResource javaScriptResource = (JavaScriptResource) session.createQuery(queryString)
-				.setString("name", name).uniqueResult();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public final JavaScriptResource findJavaScriptResourceWithName(final String name) {
+        final Session session = sessionFactory.getCurrentSession();
 
-		return javaScriptResource;
-	}
+        return (JavaScriptResource) session.createQuery(FIND_JAVASCRIPT_RESOURCE_WITH_NAME).setString("name", name)
+                .uniqueResult();
+    }
 }

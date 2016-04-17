@@ -15,22 +15,38 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.co.whatsa.persistence.ID;
 import uk.co.whatsa.research.model.WebPage;
 
+/**
+ * Tests the {@link WebPage} domain model class.
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(value="classpath:/researchRootContext.xml")
+@ContextConfiguration(value = "classpath:/researchRootContext.xml")
 public class WebPageTest {
+    /**
+     * The Hibernate session factory.
+     */
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	/**
+	 * The Hibernate session. 
+	 */
 	private Session session;
 
+	/**
+	 * Test initialisation.
+	 */
 	@Before
-	public void onStart() {
+	public final void onStart() {
 		this.session = sessionFactory.getCurrentSession();
 	}
 
+	/**
+	 * Read some pages.
+	 */
 	@Test
-	@Transactional(readOnly=true)	
-	public void readWebPages() {
-		WebPage webPage = session.get(WebPage.class, ID.valueOf(1));
-		assertEquals("First test page", webPage.getComment());
+	@Transactional(readOnly = true)	
+	public final void readWebPages() {
+		final WebPage webPage = session.get(WebPage.class, ID.valueOf(1));
+		assertEquals("First test page", webPage.getUrl());
 	}
 }
